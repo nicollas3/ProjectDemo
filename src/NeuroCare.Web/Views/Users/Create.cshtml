@@ -1,0 +1,15 @@
+@model CreateStaffUserDto
+@{ ViewData["Title"] = "Novo usuário"; }
+<h1 class="h3 mb-3">Novo usuário</h1>
+<form asp-action="Create" method="post" novalidate>
+    <div asp-validation-summary="ModelOnly" class="text-danger small mb-2"></div>
+    <div class="row g-3">
+        <div class="col-md-6"><label asp-for="FullName" class="form-label">Nome completo</label><input asp-for="FullName" class="form-control" /><span asp-validation-for="FullName" class="text-danger small"></span></div>
+        <div class="col-md-6"><label asp-for="Email" class="form-label">E-mail</label><input asp-for="Email" class="form-control" /><span asp-validation-for="Email" class="text-danger small"></span></div>
+        <div class="col-md-4"><label asp-for="Role" class="form-label">Perfil</label><select asp-for="Role" asp-items="EnumText.StaffRoleItems()" class="form-select"></select><span asp-validation-for="Role" class="text-danger small"></span></div>
+        <div class="col-md-4"><label asp-for="LicenseNumber" class="form-label">Registro profissional (CRM)</label><input asp-for="LicenseNumber" class="form-control" /></div>
+        <div class="col-md-4"><label asp-for="Specialty" class="form-label">Especialidade</label><input asp-for="Specialty" class="form-control" /></div>
+    </div>
+    <div class="form-text mt-2">Registro e especialidade valem apenas para médicos. O usuário receberá um e-mail para definir a própria senha.</div>
+    <div class="mt-4 d-flex gap-2"><button class="btn btn-primary" type="submit">Criar e convidar</button><a class="btn btn-outline-secondary" asp-action="Index">Cancelar</a></div>
+</form>

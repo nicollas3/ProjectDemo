@@ -1,0 +1,14 @@
+@model UploadDocumentDto
+@{ ViewData["Title"] = "Enviar documento"; }
+<partial name="_ClinicalHeader" />
+<h2 class="h5 mb-3">Enviar documento</h2>
+<form asp-action="Upload" asp-route-patientId="@ViewData["PatientId"]" method="post" enctype="multipart/form-data" novalidate>
+    <div asp-validation-summary="All" class="text-danger small mb-2"></div>
+    <div class="row g-3">
+        <div class="col-md-6"><label asp-for="Title" class="form-label">Título</label><input asp-for="Title" class="form-control" placeholder="ex.: Ressonância de crânio" /></div>
+        <div class="col-md-3"><label asp-for="Category" class="form-label">Categoria</label><select asp-for="Category" asp-items="EnumText.DocumentCategoryItems()" class="form-select"></select></div>
+        <div class="col-12"><label for="file" class="form-label">Arquivo (PDF, JPG ou PNG, até 10 MB)</label>
+            <input id="file" name="file" type="file" class="form-control" accept=".pdf,.jpg,.jpeg,.png,application/pdf,image/jpeg,image/png" /></div>
+    </div>
+    <div class="mt-4 d-flex gap-2"><button class="btn btn-primary" type="submit">Enviar</button><a class="btn btn-outline-secondary" asp-action="Index" asp-route-patientId="@ViewData["PatientId"]">Cancelar</a></div>
+</form>

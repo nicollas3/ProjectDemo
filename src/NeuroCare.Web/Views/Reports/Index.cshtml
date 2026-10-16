@@ -1,0 +1,147 @@
+@model PatientReportDto
+@{
+    ViewData["Title"] = "Relatório do paciente";
+    var patientId = ViewData["PatientId"];
+}
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3 no-print">
+    <form method="get" class="d-flex gap-2 align-items-center">
+        <input type="hidden" name="patientId" value="@patientId" />
+        <label class="form-label mb-0" for="days">Período dos registros</label>
+        <select id="days" name="days" class="form-select form-select-sm w-auto">
+            @foreach (var d in new[] { 30, 90, 180, 365 })
+            {
+                <option value="@d" selected="@(d == Model.PeriodDays)">@d dias</option>
+            }
+        </select>
+        <button class="btn btn-sm btn-outline-primary" type="submit">Atualizar</button>
+    </form>
+    <div class="d-flex gap-2">
+        <a class="btn btn-outline-secondary" asp-controller="Patients" asp-action="Details" asp-route-id="@patientId">Voltar</a>
+        <button type="button" class="btn btn-primary" data-print>Imprimir / Salvar como PDF</button>
+    </div>
+</div>
+
+<article class="bg-white p-4 border rounded">
+    <header class="mb-4">
+        <h1 class="h4 mb-0">Resumo do prontuário</h1>
+        <div class="text-muted">@Model.OrganizationName</div>
+    </header>
+
+    <section class="report-section mb-4">
+        <h2 class="h6 text-uppercase text-muted">Identificação</h2>
+        <dl class="row mb-0">
+            <dt class="col-sm-3">Paciente</dt><dd class="col-sm-9">@Model.PatientName</dd>
+            <dt class="col-sm-3">Idade / sexo</dt><dd class="col-sm-9">@Model.Age anos &middot; @Model.Sex.Text()</dd>
+            <dt class="col-sm-3">CPF</dt><dd class="col-sm-9">@Model.MaskedCpf</dd>
+            <dt class="col-sm-3">Médico responsável</dt><dd class="col-sm-9">@(Model.ResponsibleDoctor ?? "—")</dd>
+        </dl>
+    </section>
+
+    <section class="report-section mb-4">
+        <h2 class="h6 text-uppercase text-muted">Medicamentos em uso ou suspensos</h2>
+        @if (Model.Medications.Count == 0) { <p class="text-muted mb-0">Nenhum registrado.</p> }
+        else
+        {
+            <table class="table table-sm mb-0"><thead><tr><th>Medicamento</th><th>Dose</th><th>Frequência</th><th>Situação</th><th>Desde</th></tr></thead><tbody>
+            @foreach (var m in Model.Medications)
+            {
+                <tr><td>@m.Name</td><td>@m.Dosage</td><td>@m.Frequency</td><td>@m.Status.Label()</td><td>@m.StartDate.ToString("dd/MM/yyyy")</td></tr>
+            }
+            </tbody></table>
+        }
+    </section>
+
+    <section class="report-section mb-4">
+        <h2 class="h6 text-uppercase text-muted">Últimas evoluções assinadas (até 5)</h2>
+        @if (Model.Notes.Count == 0) { <p class="text-muted mb-0">Nenhuma evolução assinada.</p> }
+        @foreach (var n in Model.Notes)
+        {
+            <div class="mb-3 report-section">
+                <div class="fw-semibold">@n.OccurredAtLocal.ToString("dd/MM/yyyy HH:mm") &middot; @n.DoctorName</div>
+                @foreach (var (title, text) in new[] { ("S", n.Subjective), ("O", n.Objective), ("A", n.Assessment), ("P", n.Plan) })
+                {
+                    if (!string.IsNullOrWhiteSpace(text)) { <div class="pre-wrap text-break"><strong>@title:</strong> @text</div> }
+                }
+            </div>
+        }
+    </section>
+
+    <section class="report-section mb-4">
+        <h2 class="h6 text-uppercase text-muted">Sintomas registrados (últimos @Model.PeriodDays dias)</h2>
+        @if (Model.Symptoms.Count == 0) { <p class="text-muted mb-0">Nenhum registro no período.</p> }
+        else
+        {
+            <table class="table table-sm mb-0"><thead><tr><th>Sintoma</th><th>Registros</th><th>Intensidade média</th><th>Intensidade máxima</th></tr></thead><tbody>
+            @foreach (var s in Model.Symptoms)
+            {
+                <tr><td>@s.Type.Label()</td><td>@s.Count</td><td>@s.AverageIntensity.ToString("0.0")</td><td>@s.MaxIntensity</td></tr>
+            }
+            </tbody></table>
+        }
+    </section>
+
+    <section class="report-section mb-4">
+        <h2 class="h6 text-uppercase text-muted">Crises (últimos @Model.PeriodDays dias): @Model.Seizures.Count</h2>
+        @if (Model.Seizures.Count > 0)
+        {
+            <table class="table table-sm mb-0"><thead><tr><th>Data</th><th>Tipo</th><th>Duração</th><th>Perda de consciência</th></tr></thead><tbody>
+            @foreach (var z in Model.Seizures)
+            {
+                <tr><td>@z.WhenLocal.ToString("dd/MM/yyyy HH:mm")</td><td>@z.Type.Label()</td><td>@z.DurationSeconds s</td><td>@(z.LossOfConsciousness ? "Sim" : "Não")</td></tr>
+            }
+            </tbody></table>
+        }
+        else { <p class="text-muted mb-0">Nenhuma crise registrada no período.</p> }
+    </section>
+
+    <section class="report-section mb-4">
+        <h2 class="h6 text-uppercase text-muted">Quedas (últimos @Model.PeriodDays dias): @Model.Falls.Count &middot; com lesão: @Model.Falls.Count(f => f.Injury)</h2>
+        @if (Model.Falls.Count > 0)
+        {
+            <table class="table table-sm mb-0"><thead><tr><th>Data</th><th>Situação</th><th>Lesão</th><th>Atendimento médico</th></tr></thead><tbody>
+            @foreach (var f in Model.Falls)
+            {
+                <tr><td>@f.WhenLocal.ToString("dd/MM/yyyy HH:mm")</td><td>@f.Circumstance.Label()</td><td>@(f.Injury ? "Sim" : "Não")</td><td>@(f.NeededMedicalCare ? "Sim" : "Não")</td></tr>
+            }
+            </tbody></table>
+        }
+        else { <p class="text-muted mb-0">Nenhuma queda registrada no período.</p> }
+    </section>
+
+    <section class="report-section mb-4">
+        <h2 class="h6 text-uppercase text-muted">Questionários e escalas (último resultado)</h2>
+        @if (Model.Questionnaires.Count == 0) { <p class="text-muted mb-0">Nenhum aplicado.</p> }
+        else
+        {
+            <table class="table table-sm mb-0"><thead><tr><th>Instrumento</th><th>Data</th><th>Pontuação</th><th>Faixa</th><th>Anterior</th></tr></thead><tbody>
+            @foreach (var q in Model.Questionnaires)
+            {
+                <tr><td>@q.Title</td><td>@q.LastLocal.ToString("dd/MM/yyyy")</td><td>@q.Score / @q.MaxScore</td><td>@q.Band</td><td>@(q.PreviousScore.HasValue ? q.PreviousScore.Value.ToString() : "—")</td></tr>
+            }
+            </tbody></table>
+        }
+    </section>
+
+    <section class="report-section mb-4">
+        <h2 class="h6 text-uppercase text-muted">Documentos anexados</h2>
+        @if (Model.Documents.Count == 0) { <p class="text-muted mb-0">Nenhum documento.</p> }
+        else
+        {
+            <ul class="mb-0">
+            @foreach (var d in Model.Documents)
+            {
+                <li>@d.Title (@d.Category.Label()) &ndash; @d.UploadedLocal.ToString("dd/MM/yyyy")</li>
+            }
+            </ul>
+        }
+    </section>
+
+    <footer class="small text-muted border-top pt-2">
+        Gerado em @Model.GeneratedAtLocal.ToString("dd/MM/yyyy HH:mm") por @Model.GeneratedBy.
+        Documento de apoio que consolida registros do sistema, sem interpretação clínica; não substitui o prontuário oficial.
+    </footer>
+</article>
+
+@section Scripts {
+    <script src="~/js/print.js" asp-append-version="true"></script>
+}

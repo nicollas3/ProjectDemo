@@ -1,0 +1,10 @@
+@{ ViewData["Title"] = "Administração"; }
+<h1 class="h3">Administração da plataforma</h1>
+@if (User.IsInRole(Roles.Administrator))
+{
+    <p class="text-muted">Cadastre organizações (clínicas) e seus administradores. Planos e assinaturas virão em etapa futura.</p>
+    <a class="btn btn-primary" asp-controller="Organizations" asp-action="Index">Gerenciar organizações</a>
+}
+<div class="alert alert-info mt-3">
+    Administradores da plataforma não têm acesso a dados clínicos de nenhuma organização.
+</div>

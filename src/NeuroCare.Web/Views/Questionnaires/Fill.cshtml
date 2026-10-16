@@ -1,0 +1,29 @@
+@model QuestionnaireFormDto
+@{
+    ViewData["Title"] = Model.Title;
+    var selected = ViewData["Selected"] as Dictionary<int, int>;
+}
+<partial name="_ClinicalHeader" />
+<h2 class="h5">@Model.Title</h2>
+<p class="text-muted">@Model.Prompt</p>
+<div class="alert alert-info small">@Model.Disclaimer</div>
+<form asp-action="Fill" asp-route-key="@Model.Key" asp-route-patientId="@ViewData["PatientId"]" method="post" novalidate>
+    <div asp-validation-summary="All" class="text-danger small mb-2"></div>
+    @foreach (var item in Model.Items)
+    {
+        <div class="card mb-3"><div class="card-body">
+            <div class="mb-2"><strong>@(item.Index + 1).</strong> @item.Text</div>
+            @foreach (var opt in item.Options)
+            {
+                var isChecked = selected is not null && selected.TryGetValue(item.Index, out var chosen) && chosen == opt.Value;
+                var inputId = $"q{item.Index}_{opt.Value}";
+                var inputName = $"Answers[{item.Index}]";
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="@inputName" id="@inputId" value="@opt.Value" @(isChecked ? "checked" : "") />
+                    <label class="form-check-label" for="@inputId">@opt.Label</label>
+                </div>
+            }
+        </div></div>
+    }
+    <div class="d-flex gap-2"><button class="btn btn-primary" type="submit">Enviar respostas</button><a class="btn btn-outline-secondary" asp-action="Index" asp-route-patientId="@ViewData["PatientId"]">Cancelar</a></div>
+</form>

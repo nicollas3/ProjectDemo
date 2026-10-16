@@ -1,0 +1,35 @@
+@{
+    var h = (PatientHeaderDto)ViewData["Header"]!;
+    var tab = ViewData["Tab"]?.ToString() ?? "";
+    var isDoctor = User.IsInRole(Roles.Doctor);
+    var isPatient = User.IsInRole(Roles.Patient);
+    object? route = isPatient ? null : new { patientId = h.Id };
+    string Cls(string t) => t == tab ? "nav-link active" : "nav-link";
+}
+<div class="mb-3">
+    <h1 class="h3 mb-0">@h.Name</h1>
+    <div class="text-muted">
+        @h.Age anos
+        @if (isDoctor)
+        {
+            <a class="ms-2 small" asp-controller="Patients" asp-action="Details" asp-route-id="@h.Id">Ver cadastro</a>
+        }
+    </div>
+</div>
+<ul class="nav nav-tabs mb-3">
+    @if (isDoctor)
+    {
+        <li class="nav-item"><a class="@Cls("notes")" href="@Url.Action("Index", "ClinicalNotes", route)">Evolução</a></li>
+    }
+    <li class="nav-item"><a class="@Cls("medications")" href="@Url.Action("Index", "Medications", route)">Medicamentos</a></li>
+    <li class="nav-item"><a class="@Cls("symptoms")" href="@Url.Action("Index", "Symptoms", route)">Sintomas</a></li>
+    <li class="nav-item"><a class="@Cls("seizures")" href="@Url.Action("Index", "Seizures", route)">Crises</a></li>
+    <li class="nav-item"><a class="@Cls("falls")" href="@Url.Action("Index", "Falls", route)">Quedas</a></li>
+    <li class="nav-item"><a class="@Cls("questionnaires")" href="@Url.Action("Index", "Questionnaires", route)">Questionários</a></li>
+    <li class="nav-item"><a class="@Cls("documents")" href="@Url.Action("Index", "Documents", route)">Documentos</a></li>
+    <li class="nav-item"><a class="@Cls("timeline")" href="@Url.Action("Index", "Timeline", route)">Linha do tempo</a></li>
+    @if (isDoctor)
+    {
+        <li class="nav-item ms-auto"><a class="nav-link" href="@Url.Action("Index", "Reports", route)">Relatório</a></li>
+    }
+</ul>

@@ -1,0 +1,39 @@
+@model IReadOnlyList<DocumentListItemDto>
+@{
+    ViewData["Title"] = "Documentos";
+    var h = (PatientHeaderDto)ViewData["Header"]!;
+    var isDoctor = User.IsInRole(Roles.Doctor);
+    var isPatient = User.IsInRole(Roles.Patient);
+    object? route = isPatient ? null : new { patientId = h.Id };
+    string Size(long b) => b >= 1048576 ? $"{b / 1048576.0:0.0} MB" : $"{Math.Max(1, b / 1024)} KB";
+}
+<partial name="_ClinicalHeader" />
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+    <h2 class="h5 mb-0">Documentos</h2>
+    <a class="btn btn-primary" href="@Url.Action("Upload", "Documents", route)">Enviar documento</a>
+</div>
+<div class="card"><div class="table-responsive">
+<table class="table mb-0 align-middle">
+    <thead><tr><th>Título</th><th>Categoria</th><th>Arquivo</th><th>Tamanho</th><th>Enviado em</th><th>Por</th><th></th></tr></thead>
+    <tbody>
+    @foreach (var d in Model)
+    {
+        <tr>
+            <td class="text-break">@d.Title</td><td>@d.Category.Label()</td><td class="text-break small">@d.FileName</td>
+            <td>@Size(d.SizeBytes)</td><td>@d.UploadedAtLocal.ToString("dd/MM/yyyy HH:mm")</td><td>@(d.UploadedByPatient ? "Paciente" : "Equipe")</td>
+            <td class="text-end">
+                <a class="btn btn-sm btn-outline-primary" asp-action="Download" asp-route-id="@d.Id">Baixar</a>
+                @if (isDoctor)
+                {
+                    <form asp-action="Delete" method="post" class="d-inline">
+                        <input type="hidden" name="id" value="@d.Id" /><input type="hidden" name="patientId" value="@h.Id" />
+                        <button class="btn btn-sm btn-outline-danger" type="submit">Remover</button>
+                    </form>
+                }
+            </td>
+        </tr>
+    }
+    @if (Model.Count == 0) { <tr><td colspan="7" class="text-muted text-center py-4">Nenhum documento enviado.</td></tr> }
+    </tbody>
+</table></div></div>
+<p class="small text-muted mt-2">Formatos aceitos: PDF, JPG e PNG, até 10 MB. Os arquivos são baixados como anexo.</p>

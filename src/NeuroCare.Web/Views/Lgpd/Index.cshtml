@@ -1,0 +1,47 @@
+@model IReadOnlyList<ConsentDto>
+@{ ViewData["Title"] = "Privacidade e LGPD"; }
+<h1 class="h3 mb-1">Privacidade e LGPD</h1>
+<p class="text-muted">Consulte consentimentos e exporte uma cópia estruturada dos seus dados.</p>
+
+<div class="alert alert-info">Consentimento é registrado por finalidade e versão. A revogação não apaga automaticamente registros cuja retenção seja necessária por obrigação legal ou regulatória.</div>
+
+<div class="card mb-4"><div class="card-body">
+    <h2 class="h5">Exportar meus dados</h2>
+    <p class="text-muted">O arquivo JSON contém dados cadastrais e registros clínicos associados ao seu perfil. Ele pode conter dados pessoais sensíveis.</p>
+    <form asp-action="Export" method="post"><button class="btn btn-outline-primary" type="submit">Gerar exportação</button></form>
+</div></div>
+
+<div class="card mb-4"><div class="card-body">
+    <h2 class="h5">Consentimentos disponíveis</h2>
+    @foreach (var purpose in ConsentPurposeCatalog.All)
+    {
+        var active = Model.Any(x => x.PurposeKey == purpose.Key && x.Version == purpose.Version && x.Status == ConsentStatus.Granted);
+        <div class="border rounded p-3 mb-2">
+            <div class="fw-semibold">Lembretes por e-mail <span class="badge text-bg-light">v@purpose.Version</span></div>
+            <p class="mb-2">@purpose.Text</p>
+            @if (active) { <span class="badge text-bg-success">Consentimento ativo</span> }
+            else
+            {
+                <form asp-action="Grant" method="post">
+                    <input type="hidden" name="PurposeKey" value="@purpose.Key" />
+                    <input type="hidden" name="PurposeText" value="@purpose.Text" />
+                    <input type="hidden" name="Version" value="@purpose.Version" />
+                    <input type="hidden" name="Accepted" value="true" />
+                    <button class="btn btn-primary btn-sm" type="submit">Concordar</button>
+                </form>
+            }
+        </div>
+    }
+</div></div>
+
+<div class="card"><div class="card-body"><h2 class="h5">Histórico</h2>
+    <div class="table-responsive"><table class="table align-middle"><thead><tr><th>Finalidade</th><th>Versão</th><th>Concedido em</th><th>Status</th><th></th></tr></thead><tbody>
+    @foreach (var item in Model)
+    {
+        <tr><td><strong>@item.PurposeKey</strong><div class="small text-muted">@item.PurposeText</div></td><td>@item.Version</td><td>@item.GrantedAtLocal.ToString("dd/MM/yyyy HH:mm")</td><td>@item.Status</td><td class="text-end">
+        @if (item.Status == ConsentStatus.Granted) { <form asp-action="Revoke" method="post"><input type="hidden" name="id" value="@item.Id" /><button class="btn btn-sm btn-outline-danger" type="submit">Revogar</button></form> }
+        </td></tr>
+    }
+    @if (Model.Count == 0) { <tr><td colspan="5" class="text-muted text-center">Nenhum consentimento registrado.</td></tr> }
+    </tbody></table></div>
+</div></div>

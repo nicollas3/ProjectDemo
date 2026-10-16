@@ -1,0 +1,46 @@
+
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NeuroCare.Domain", "src\NeuroCare.Domain\NeuroCare.Domain.csproj", "{FB5BF710-8EEF-47AB-813E-4F5E02A30BC4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NeuroCare.Application", "src\NeuroCare.Application\NeuroCare.Application.csproj", "{1E7AB78D-F663-4126-8D51-3F44D99B5297}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NeuroCare.Infrastructure", "src\NeuroCare.Infrastructure\NeuroCare.Infrastructure.csproj", "{B721C378-0A0C-4EC1-9BAF-24264D2F5FB6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NeuroCare.Web", "src\NeuroCare.Web\NeuroCare.Web.csproj", "{A139F187-16C6-47F7-B60A-6FDBFC26B499}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NeuroCare.Tests", "tests\NeuroCare.Tests\NeuroCare.Tests.csproj", "{C277D9E4-2936-4DBC-BADA-626238820B51}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FB5BF710-8EEF-47AB-813E-4F5E02A30BC4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FB5BF710-8EEF-47AB-813E-4F5E02A30BC4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FB5BF710-8EEF-47AB-813E-4F5E02A30BC4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FB5BF710-8EEF-47AB-813E-4F5E02A30BC4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1E7AB78D-F663-4126-8D51-3F44D99B5297}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1E7AB78D-F663-4126-8D51-3F44D99B5297}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1E7AB78D-F663-4126-8D51-3F44D99B5297}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1E7AB78D-F663-4126-8D51-3F44D99B5297}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B721C378-0A0C-4EC1-9BAF-24264D2F5FB6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B721C378-0A0C-4EC1-9BAF-24264D2F5FB6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B721C378-0A0C-4EC1-9BAF-24264D2F5FB6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B721C378-0A0C-4EC1-9BAF-24264D2F5FB6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A139F187-16C6-47F7-B60A-6FDBFC26B499}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A139F187-16C6-47F7-B60A-6FDBFC26B499}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A139F187-16C6-47F7-B60A-6FDBFC26B499}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A139F187-16C6-47F7-B60A-6FDBFC26B499}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C277D9E4-2936-4DBC-BADA-626238820B51}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C277D9E4-2936-4DBC-BADA-626238820B51}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C277D9E4-2936-4DBC-BADA-626238820B51}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C277D9E4-2936-4DBC-BADA-626238820B51}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

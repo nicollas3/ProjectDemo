@@ -1,0 +1,49 @@
+@model IReadOnlyList<FallListItemDto>
+@using System.Text.Json
+@{
+    ViewData["Title"] = "Quedas";
+    var h = (PatientHeaderDto)ViewData["Header"]!;
+    var isPatient = User.IsInRole(Roles.Patient);
+    var days = (int)(ViewData["Days"] ?? 90);
+    var byMonth = Model.GroupBy(s => new { s.OccurredAtLocal.Year, s.OccurredAtLocal.Month })
+        .OrderBy(g => g.Key.Year).ThenBy(g => g.Key.Month).ToList();
+    var labels = byMonth.Select(g => $"{g.Key.Month:00}/{g.Key.Year}").ToArray();
+    var values = byMonth.Select(g => g.Count()).ToArray();
+    object? route = isPatient ? null : new { patientId = h.Id };
+}
+<partial name="_ClinicalHeader" />
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+    <h2 class="h5 mb-0">Diário de quedas (últimos @days dias)</h2>
+    <a class="btn btn-primary" href="@Url.Action("Create", "Falls", route)">Registrar queda</a>
+</div>
+<div class="alert alert-warning small">Em caso de lesão ou emergência, ligue <strong>192 (SAMU)</strong>. Este registro é um diário e não substitui atendimento médico.</div>
+
+@if (Model.Count > 0)
+{
+    <div class="card mb-3"><div class="card-body">
+        <div class="small text-muted mb-2">Quedas por mês</div>
+        <canvas data-chart="bar" data-label="Quedas"
+                data-labels="@JsonSerializer.Serialize(labels)" data-values="@JsonSerializer.Serialize(values)"></canvas>
+    </div></div>
+}
+
+<div class="card"><div class="table-responsive">
+<table class="table mb-0 align-middle">
+    <thead><tr><th>Data</th><th>Situação</th><th>Local</th><th>Lesão</th><th>Atendimento médico</th><th>Observações</th><th>Registrado por</th></tr></thead>
+    <tbody>
+    @foreach (var f in Model)
+    {
+        <tr>
+            <td>@f.OccurredAtLocal.ToString("dd/MM/yyyy HH:mm")</td><td>@f.Circumstance.Label()</td><td class="text-break">@f.Location</td>
+            <td>@(f.Injury ? "Sim" : "Não")</td><td>@(f.NeededMedicalCare ? "Sim" : "Não")</td>
+            <td class="text-break">@f.Notes</td><td>@(f.RecordedByPatient ? "Paciente" : "Equipe")</td>
+        </tr>
+    }
+    @if (Model.Count == 0) { <tr><td colspan="7" class="text-muted text-center py-4">Nenhuma queda registrada no período.</td></tr> }
+    </tbody>
+</table></div></div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+    <script src="~/js/dashboard.js" asp-append-version="true"></script>
+}

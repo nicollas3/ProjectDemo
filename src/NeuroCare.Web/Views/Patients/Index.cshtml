@@ -1,0 +1,26 @@
+@model IReadOnlyList<PatientListItemDto>
+@{ ViewData["Title"] = "Pacientes"; }
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+    <h1 class="h3 mb-0">Pacientes</h1>
+    <a class="btn btn-primary" asp-action="Create">Novo paciente</a>
+</div>
+<form method="get" class="row g-2 mb-3">
+    <div class="col-12 col-md-6"><input name="term" value="@ViewData["Term"]" class="form-control" placeholder="Buscar por nome ou CPF (11 dígitos)" /></div>
+    <div class="col-auto d-flex align-items-center"><div class="form-check"><input class="form-check-input" type="checkbox" name="includeInactive" value="true" id="inc" @((bool)ViewData["IncludeInactive"]! ? "checked" : null) /><label class="form-check-label" for="inc">Incluir inativos</label></div></div>
+    <div class="col-auto"><button class="btn btn-outline-primary" type="submit">Buscar</button></div>
+</form>
+<div class="card"><div class="table-responsive">
+<table class="table table-hover mb-0 align-middle">
+    <thead><tr><th>Nome</th><th>Idade</th><th>Telefone</th><th>Médico responsável</th><th>Status</th></tr></thead>
+    <tbody>
+    @foreach (var p in Model)
+    {
+        <tr>
+            <td><a asp-action="Details" asp-route-id="@p.Id">@p.FullName</a>@if (!string.IsNullOrEmpty(p.SocialName)) { <small class="text-muted"> (@p.SocialName)</small> }</td>
+            <td>@p.Age</td><td>@p.Phone</td><td>@p.DoctorName</td>
+            <td><span class="badge @(p.Status == PatientStatus.Active ? "text-bg-success" : "text-bg-secondary")">@p.Status.Text()</span></td>
+        </tr>
+    }
+    @if (Model.Count == 0) { <tr><td colspan="5" class="text-muted text-center py-4">Nenhum paciente encontrado.</td></tr> }
+    </tbody>
+</table></div></div>

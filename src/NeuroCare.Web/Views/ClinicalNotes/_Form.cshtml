@@ -1,0 +1,9 @@
+@model SaveClinicalNoteDto
+<div class="row g-3">
+    <div class="col-md-4"><label asp-for="OccurredAtLocal" class="form-label">Data e horário</label><input asp-for="OccurredAtLocal" type="datetime-local" class="form-control" /><span asp-validation-for="OccurredAtLocal" class="text-danger small"></span></div>
+    <div class="col-12"><label asp-for="Subjective" class="form-label">S – Subjetivo (queixa e relato do paciente)</label><textarea asp-for="Subjective" rows="4" class="form-control"></textarea></div>
+    <div class="col-12"><label asp-for="Objective" class="form-label">O – Objetivo (exame e achados)</label><textarea asp-for="Objective" rows="4" class="form-control"></textarea></div>
+    <div class="col-12"><label asp-for="Assessment" class="form-label">A – Avaliação</label><textarea asp-for="Assessment" rows="4" class="form-control"></textarea></div>
+    <div class="col-12"><label asp-for="Plan" class="form-label">P – Plano</label><textarea asp-for="Plan" rows="4" class="form-control"></textarea></div>
+</div>
+<div class="form-text mt-2">A avaliação e o plano são de responsabilidade do médico. O sistema não sugere diagnósticos.</div>

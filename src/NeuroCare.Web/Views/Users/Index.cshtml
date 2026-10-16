@@ -1,0 +1,34 @@
+@model IReadOnlyList<UserSummaryDto>
+@{ ViewData["Title"] = "Usuários"; }
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+    <h1 class="h3 mb-0">Usuários da organização</h1>
+    <a class="btn btn-primary" asp-action="Create">Novo usuário</a>
+</div>
+<div class="card"><div class="table-responsive">
+<table class="table mb-0 align-middle">
+    <thead><tr><th>Nome</th><th>E-mail</th><th>Perfil</th><th>Situação</th><th></th></tr></thead>
+    <tbody>
+    @foreach (var u in Model)
+    {
+        <tr>
+            <td>@u.FullName</td><td>@u.Email</td><td>@EnumText.RoleText(u.Role)</td>
+            <td>
+                @if (!u.Active) { <span class="badge text-bg-secondary">Inativo</span> }
+                else if (!u.EmailConfirmed) { <span class="badge text-bg-warning">Convite pendente</span> }
+                else { <span class="badge text-bg-success">Ativo</span> }
+            </td>
+            <td class="text-end">
+                @if (u.Active && !u.EmailConfirmed)
+                {
+                    <form asp-action="ResendInvite" method="post" class="d-inline"><input type="hidden" name="id" value="@u.Id" /><button class="btn btn-sm btn-outline-primary" type="submit">Reenviar convite</button></form>
+                }
+                <form asp-action="SetActive" method="post" class="d-inline">
+                    <input type="hidden" name="id" value="@u.Id" />
+                    <input type="hidden" name="active" value="@(u.Active ? "false" : "true")" />
+                    <button class="btn btn-sm @(u.Active ? "btn-outline-danger" : "btn-outline-success")" type="submit">@(u.Active ? "Desativar" : "Reativar")</button>
+                </form>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table></div></div>

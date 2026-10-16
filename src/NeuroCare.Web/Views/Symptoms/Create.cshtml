@@ -1,0 +1,14 @@
+@model SaveSymptomDto
+@{ ViewData["Title"] = "Registrar sintoma"; }
+<partial name="_ClinicalHeader" />
+<h2 class="h5 mb-3">Registrar sintoma</h2>
+<form asp-action="Create" asp-route-patientId="@ViewData["PatientId"]" method="post" novalidate>
+    <div asp-validation-summary="ModelOnly" class="text-danger small mb-2"></div>
+    <div class="row g-3">
+        <div class="col-md-4"><label asp-for="OccurredAtLocal" class="form-label">Quando</label><input asp-for="OccurredAtLocal" type="datetime-local" class="form-control" /><span asp-validation-for="OccurredAtLocal" class="text-danger small"></span></div>
+        <div class="col-md-5"><label asp-for="Type" class="form-label">Sintoma</label><select asp-for="Type" asp-items="EnumText.SymptomTypeItems()" class="form-select"></select></div>
+        <div class="col-md-3"><label asp-for="Intensity" class="form-label">Intensidade (0 a 10)</label><input asp-for="Intensity" type="number" min="0" max="10" class="form-control" /><span asp-validation-for="Intensity" class="text-danger small"></span></div>
+        <div class="col-12"><label asp-for="Notes" class="form-label">Observações</label><textarea asp-for="Notes" rows="3" class="form-control"></textarea></div>
+    </div>
+    <div class="mt-4 d-flex gap-2"><button class="btn btn-primary" type="submit">Salvar</button><a class="btn btn-outline-secondary" asp-action="Index" asp-route-patientId="@ViewData["PatientId"]">Cancelar</a></div>
+</form>

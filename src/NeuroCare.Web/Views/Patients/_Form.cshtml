@@ -1,0 +1,21 @@
+@model PatientInputDto
+@{
+    var doctors = (SelectList)ViewData["Doctors"]!;
+}
+<div class="row g-3">
+    <div class="col-md-8"><label asp-for="FullName" class="form-label">Nome completo</label><input asp-for="FullName" class="form-control" /><span asp-validation-for="FullName" class="text-danger small"></span></div>
+    <div class="col-md-4"><label asp-for="SocialName" class="form-label">Nome social</label><input asp-for="SocialName" class="form-control" /></div>
+    <div class="col-md-4"><label asp-for="BirthDate" class="form-label">Data de nascimento</label><input asp-for="BirthDate" type="date" class="form-control" /><span asp-validation-for="BirthDate" class="text-danger small"></span></div>
+    <div class="col-md-4"><label asp-for="Sex" class="form-label">Sexo</label><select asp-for="Sex" asp-items="EnumText.SexItems()" class="form-select"></select></div>
+    <div class="col-md-4"><label asp-for="Phone" class="form-label">Telefone</label><input asp-for="Phone" class="form-control" /></div>
+    <div class="col-md-6"><label asp-for="Email" class="form-label">E-mail</label><input asp-for="Email" class="form-control" /><span asp-validation-for="Email" class="text-danger small"></span></div>
+    <div class="col-md-6"><label asp-for="Address" class="form-label">Endereço</label><input asp-for="Address" class="form-control" /></div>
+    <div class="col-md-6"><label asp-for="EmergencyContactName" class="form-label">Contato de emergência</label><input asp-for="EmergencyContactName" class="form-control" /></div>
+    <div class="col-md-6"><label asp-for="EmergencyContactPhone" class="form-label">Telefone de emergência</label><input asp-for="EmergencyContactPhone" class="form-control" /></div>
+    <div class="col-md-6">
+        <label asp-for="ResponsibleDoctorId" class="form-label">Médico responsável</label>
+        <select asp-for="ResponsibleDoctorId" asp-items="doctors" class="form-select"><option value="">— Sem médico responsável —</option></select>
+        <span asp-validation-for="ResponsibleDoctorId" class="text-danger small"></span>
+    </div>
+    <div class="col-12"><label asp-for="Notes" class="form-label">Observações</label><textarea asp-for="Notes" rows="3" class="form-control"></textarea></div>
+</div>

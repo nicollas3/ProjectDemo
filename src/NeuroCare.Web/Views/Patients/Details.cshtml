@@ -1,0 +1,89 @@
+@model PatientDetailsDto
+@{ ViewData["Title"] = Model.FullName; }
+<div class="d-flex flex-wrap justify-content-between align-items-start gap-2 mb-3">
+    <div>
+        <h1 class="h3 mb-0">@Model.FullName</h1>
+        <div class="text-muted">@Model.Age anos &middot; @Model.Sex.Text() &middot; <span class="badge @(Model.Status == PatientStatus.Active ? "text-bg-success" : "text-bg-secondary")">@Model.Status.Text()</span></div>
+    </div>
+    <div class="d-flex gap-2">
+        <a class="btn btn-outline-primary" asp-action="Edit" asp-route-id="@Model.Id">Editar</a>
+        <a class="btn btn-primary" asp-controller="Appointments" asp-action="Create" asp-route-patientId="@Model.Id">Agendar consulta</a>
+        @if (!Model.HasPortalAccess && !string.IsNullOrWhiteSpace(Model.Email))
+        {
+            <form asp-action="InvitePortal" method="post">
+                <input type="hidden" name="id" value="@Model.Id" />
+                <button class="btn btn-outline-success" type="submit">Convidar para o portal</button>
+            </form>
+        }
+        <form asp-action="SetStatus" method="post">
+            <input type="hidden" name="id" value="@Model.Id" />
+            <input type="hidden" name="status" value="@(Model.Status == PatientStatus.Active ? "Inactive" : "Active")" />
+            <button class="btn btn-outline-secondary" type="submit">@(Model.Status == PatientStatus.Active ? "Desativar" : "Reativar")</button>
+        </form>
+    </div>
+</div>
+
+<ul class="nav nav-tabs mb-3" role="tablist">
+    <li class="nav-item"><button class="nav-link active" data-bs-toggle="tab" data-bs-target="#tab-resumo" type="button" role="tab">Resumo</button></li>
+    <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-consultas" type="button" role="tab">Consultas</button></li>
+    @if (User.IsInRole(Roles.Doctor))
+    {
+        <li class="nav-item"><a class="nav-link" asp-controller="ClinicalNotes" asp-action="Index" asp-route-patientId="@Model.Id">Evolução</a></li>
+        <li class="nav-item"><a class="nav-link" asp-controller="Medications" asp-action="Index" asp-route-patientId="@Model.Id">Medicamentos</a></li>
+        <li class="nav-item"><a class="nav-link" asp-controller="Symptoms" asp-action="Index" asp-route-patientId="@Model.Id">Sintomas</a></li>
+        <li class="nav-item"><a class="nav-link" asp-controller="Seizures" asp-action="Index" asp-route-patientId="@Model.Id">Crises</a></li>
+        <li class="nav-item"><a class="nav-link" asp-controller="Falls" asp-action="Index" asp-route-patientId="@Model.Id">Quedas</a></li>
+        <li class="nav-item"><a class="nav-link" asp-controller="Questionnaires" asp-action="Index" asp-route-patientId="@Model.Id">Questionários</a></li>
+        <li class="nav-item"><a class="nav-link" asp-controller="Documents" asp-action="Index" asp-route-patientId="@Model.Id">Documentos</a></li>
+        <li class="nav-item"><a class="nav-link" asp-controller="Timeline" asp-action="Index" asp-route-patientId="@Model.Id">Linha do Tempo</a></li>
+        <li class="nav-item ms-auto"><a class="nav-link" asp-controller="Reports" asp-action="Index" asp-route-patientId="@Model.Id">Relatório</a></li>
+    }
+    else
+    {
+        foreach (var t in new[] { "Evolução", "Medicamentos", "Sintomas", "Crises", "Quedas", "Questionários", "Documentos", "Linha do Tempo" })
+        {
+            <li class="nav-item"><span class="nav-link disabled" title="Acesso clínico restrito a médicos">@t</span></li>
+        }
+    }
+    @foreach (var t in new[] { "Exames" })
+    {
+        <li class="nav-item"><span class="nav-link disabled" title="Disponível nas próximas etapas">@t</span></li>
+    }
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade show active" id="tab-resumo" role="tabpanel">
+        <div class="row g-3">
+            <div class="col-lg-6"><div class="card h-100"><div class="card-header bg-white fw-semibold">Dados básicos</div>
+                <dl class="row m-0 p-3">
+                    <dt class="col-5">Nome social</dt><dd class="col-7">@(Model.SocialName ?? "—")</dd>
+                    <dt class="col-5">CPF</dt><dd class="col-7">@Model.MaskedCpf</dd>
+                    <dt class="col-5">Nascimento</dt><dd class="col-7">@Model.BirthDate.ToString("dd/MM/yyyy")</dd>
+                    <dt class="col-5">Telefone</dt><dd class="col-7">@(Model.Phone ?? "—")</dd>
+                    <dt class="col-5">E-mail</dt><dd class="col-7">@(Model.Email ?? "—")</dd>
+                    <dt class="col-5">Endereço</dt><dd class="col-7">@(Model.Address ?? "—")</dd>
+                    <dt class="col-5">Médico responsável</dt><dd class="col-7">@(Model.ResponsibleDoctorName ?? "—")</dd>
+                    <dt class="col-5">Cadastro</dt><dd class="col-7">@Model.CreatedAt.ToString("dd/MM/yyyy")</dd>
+                </dl></div></div>
+            <div class="col-lg-6"><div class="card h-100"><div class="card-header bg-white fw-semibold">Contato de emergência e observações</div>
+                <dl class="row m-0 p-3">
+                    <dt class="col-5">Contato</dt><dd class="col-7">@(Model.EmergencyContactName ?? "—")</dd>
+                    <dt class="col-5">Telefone</dt><dd class="col-7">@(Model.EmergencyContactPhone ?? "—")</dd>
+                    <dt class="col-5">Observações</dt><dd class="col-7">@(Model.Notes ?? "—")</dd>
+                </dl></div></div>
+        </div>
+    </div>
+    <div class="tab-pane fade" id="tab-consultas" role="tabpanel">
+        <div class="card"><div class="table-responsive">
+            <table class="table mb-0 align-middle">
+                <thead><tr><th>Data</th><th>Tipo</th><th>Médico</th><th>Status</th></tr></thead>
+                <tbody>
+                @foreach (var a in Model.Appointments)
+                {
+                    <tr><td>@a.StartsAtLocal.ToString("dd/MM/yyyy HH:mm")</td><td>@a.Type.Text()</td><td>@a.DoctorName</td><td><span class="badge @a.Status.Badge()">@a.Status.Text()</span></td></tr>
+                }
+                @if (Model.Appointments.Count == 0) { <tr><td colspan="4" class="text-muted text-center py-4">Sem consultas registradas.</td></tr> }
+                </tbody>
+            </table></div></div>
+    </div>
+</div>

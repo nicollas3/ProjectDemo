@@ -1,0 +1,320 @@
+@model LoginViewModel
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    ViewData["Title"] = "Entrar";
+
+    var returnUrl =
+        ViewData["ReturnUrl"]?.ToString();
+}
+
+@section Styles
+{
+    <link rel="stylesheet"
+          href="~/css/login.css"
+          asp-append-version="true" />
+}
+
+<main class="neurocare-login">
+
+    <section class="neurocare-card"
+             aria-label="Login NeuroCare">
+
+        <div class="neurocare-form-content">
+
+            <!-- CABEÇALHO DO LOGIN -->
+            <div class="neurocare-form-header">
+
+                <span class="neurocare-form-welcome">
+                    Bem-vindo de volta
+                </span>
+
+                <h1>
+                    Entre na sua conta
+                </h1>
+
+                <p>
+                    Informe seus dados para continuar.
+                </p>
+
+            </div>
+
+
+            <!-- FORMULÁRIO -->
+            <form asp-action="Login"
+                  asp-route-returnUrl="@returnUrl"
+                  method="post"
+                  class="neurocare-form-login">
+
+                @Html.AntiForgeryToken()
+
+                <div asp-validation-summary="ModelOnly"
+                     class="neurocare-validation-summary"
+                     role="alert">
+                </div>
+
+
+                <!-- E-MAIL -->
+                <div class="neurocare-field">
+
+                    <label asp-for="Email">
+                        E-mail
+                    </label>
+
+                    <div class="neurocare-input-wrapper">
+
+                        <span class="neurocare-input-icon"
+                              aria-hidden="true">
+
+                            <svg viewBox="0 0 24 24"
+                                 width="18"
+                                 height="18"
+                                 fill="none"
+                                 xmlns="http://www.w3.org/2000/svg">
+
+                                <path d="M3.5 5.5H20.5C21.3284 5.5 22 6.17157 22 7V17C22 17.8284 21.3284 18.5 20.5 18.5H3.5C2.67157 18.5 2 17.8284 2 17V7C2 6.17157 2.67157 5.5 3.5 5.5Z"
+                                      stroke="currentColor"
+                                      stroke-width="1.7" />
+
+                                <path d="M3 7L12 13.5L21 7"
+                                      stroke="currentColor"
+                                      stroke-width="1.7"
+                                      stroke-linecap="round"
+                                      stroke-linejoin="round" />
+
+                            </svg>
+
+                        </span>
+
+                        <input asp-for="Email"
+                               class="neurocare-input"
+                               placeholder="Digite seu e-mail"
+                               autocomplete="username" />
+
+                    </div>
+
+                    <span asp-validation-for="Email"
+                          class="neurocare-validation">
+                    </span>
+
+                </div>
+
+
+                <!-- SENHA -->
+                <div class="neurocare-field">
+
+                    <label asp-for="Password">
+                        Senha
+                    </label>
+
+                    <div class="neurocare-input-wrapper">
+
+                        <span class="neurocare-input-icon"
+                              aria-hidden="true">
+
+                            <svg viewBox="0 0 24 24"
+                                 width="18"
+                                 height="18"
+                                 fill="none"
+                                 xmlns="http://www.w3.org/2000/svg">
+
+                                <rect x="5"
+                                      y="10"
+                                      width="14"
+                                      height="10"
+                                      rx="2"
+                                      stroke="currentColor"
+                                      stroke-width="1.7" />
+
+                                <path d="M8 10V7.5C8 5.01472 9.79086 3 12 3C14.2091 3 16 5.01472 16 7.5V10"
+                                      stroke="currentColor"
+                                      stroke-width="1.7"
+                                      stroke-linecap="round" />
+
+                            </svg>
+
+                        </span>
+
+                        <input asp-for="Password"
+                               type="password"
+                               class="neurocare-input neurocare-password-input"
+                               placeholder="Digite sua senha"
+                               autocomplete="current-password" />
+
+                        <!-- BOTÃO MOSTRAR SENHA -->
+                        <button type="button"
+                                class="neurocare-password-button"
+                                data-toggle-password
+                                aria-label="Mostrar senha"
+                                aria-pressed="false"
+                                title="Mostrar senha">
+
+                            <!-- OLHO FECHADO -->
+                            <svg class="password-eye password-eye-closed"
+                                 viewBox="0 0 24 24"
+                                 width="21"
+                                 height="21"
+                                 fill="none"
+                                 xmlns="http://www.w3.org/2000/svg"
+                                 aria-hidden="true">
+
+                                <path d="M2.5 12C2.5 12 6 5.5 12 5.5C18 5.5 21.5 12 21.5 12C21.5 12 18 18.5 12 18.5C6 18.5 2.5 12 2.5 12Z"
+                                      stroke="currentColor"
+                                      stroke-width="1.7"
+                                      stroke-linecap="round"
+                                      stroke-linejoin="round" />
+
+                                <circle cx="12"
+                                        cy="12"
+                                        r="3"
+                                        stroke="currentColor"
+                                        stroke-width="1.7" />
+
+                            </svg>
+
+
+                            <!-- OLHO ABERTO / OCULTAR -->
+                            <svg class="password-eye password-eye-open"
+                                 viewBox="0 0 24 24"
+                                 width="21"
+                                 height="21"
+                                 fill="none"
+                                 xmlns="http://www.w3.org/2000/svg"
+                                 aria-hidden="true">
+
+                                <path d="M3 3L21 21"
+                                      stroke="currentColor"
+                                      stroke-width="1.8"
+                                      stroke-linecap="round" />
+
+                                <path d="M10.58 5.7C11.03 5.57 11.5 5.5 12 5.5C18 5.5 21.5 12 21.5 12C21.5 12 20.15 14.51 17.76 16.28"
+                                      stroke="currentColor"
+                                      stroke-width="1.7"
+                                      stroke-linecap="round"
+                                      stroke-linejoin="round" />
+
+                                <path d="M6.24 7.72C3.85 9.49 2.5 12 2.5 12C2.5 12 6 18.5 12 18.5C13.21 18.5 14.32 18.24 15.31 17.82"
+                                      stroke="currentColor"
+                                      stroke-width="1.7"
+                                      stroke-linecap="round"
+                                      stroke-linejoin="round" />
+
+                                <path d="M9.88 9.88C9.33 10.43 9 11.18 9 12C9 13.66 10.34 15 12 15C12.82 15 13.57 14.67 14.12 14.12"
+                                      stroke="currentColor"
+                                      stroke-width="1.7"
+                                      stroke-linecap="round" />
+
+                            </svg>
+
+                        </button>
+
+                    </div>
+
+                    <span asp-validation-for="Password"
+                          class="neurocare-validation">
+                    </span>
+
+                </div>
+
+
+                <!-- OPÇÕES -->
+                <div class="neurocare-options">
+
+                    <label class="neurocare-remember">
+
+                        <input asp-for="RememberMe" />
+
+                        <span class="neurocare-checkmark"></span>
+
+                        <span>
+                            Manter conectado
+                        </span>
+
+                    </label>
+
+
+                    <a class="neurocare-forgot"
+                       asp-action="ForgotPassword">
+
+                        Esqueci minha senha
+
+                    </a>
+
+                </div>
+
+
+                <!-- BOTÃO ENTRAR -->
+                <button class="neurocare-submit"
+                        type="submit">
+
+                    <span>
+                        Entrar
+                    </span>
+
+                    <svg class="neurocare-submit-arrow"
+                         viewBox="0 0 24 24"
+                         width="19"
+                         height="19"
+                         fill="none"
+                         xmlns="http://www.w3.org/2000/svg"
+                         aria-hidden="true">
+
+                        <path d="M5 12H19"
+                              stroke="currentColor"
+                              stroke-width="2"
+                              stroke-linecap="round" />
+
+                        <path d="M13 6L19 12L13 18"
+                              stroke="currentColor"
+                              stroke-width="2"
+                              stroke-linecap="round"
+                              stroke-linejoin="round" />
+
+                    </svg>
+
+                </button>
+
+            </form>
+
+
+            <!-- SEGURANÇA -->
+            <div class="neurocare-security">
+
+                <svg viewBox="0 0 24 24"
+                     width="18"
+                     height="18"
+                     fill="none"
+                     xmlns="http://www.w3.org/2000/svg"
+                     aria-hidden="true">
+
+                    <path d="M12 3L19 6V11.5C19 16.15 16.05 19.55 12 21C7.95 19.55 5 16.15 5 11.5V6L12 3Z"
+                          stroke="currentColor"
+                          stroke-width="1.7"
+                          stroke-linejoin="round" />
+
+                    <path d="M9 12L11 14L15 10"
+                          stroke="currentColor"
+                          stroke-width="1.7"
+                          stroke-linecap="round"
+                          stroke-linejoin="round" />
+
+                </svg>
+
+                <span>
+                    Acesso seguro e confidencial
+                </span>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</main>
+
+@section Scripts
+{
+    <script src="~/js/password-toggle.js"
+            asp-append-version="true"></script>
+}

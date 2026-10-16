@@ -1,0 +1,28 @@
+# Ambiente LOCAL de desenvolvimento (Development + seed fictício). Não use em produção.
+services:
+  db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: ${MSSQL_SA_PASSWORD:?defina MSSQL_SA_PASSWORD no arquivo .env}
+    ports: ["1433:1433"]
+    volumes: [neurocare-sql:/var/opt/mssql]
+
+  web:
+    build: .
+    depends_on: [db]
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ConnectionStrings__DefaultConnection: "Server=db;Database=NeuroCare;User Id=sa;Password=${MSSQL_SA_PASSWORD};TrustServerCertificate=True"
+      Database__AutoInitialize: "true"
+      Seed__Enabled: "true"
+      App__PublicBaseUrl: "http://localhost:8080"
+      Email__UseLogSender: "true"
+      Storage__RootPath: /app/App_Data/uploads
+      Seed__DemoPassword: ${SEED_DEMO_PASSWORD:?defina SEED_DEMO_PASSWORD no arquivo .env}
+    ports: ["8080:8080"]
+    volumes: [neurocare-uploads:/app/App_Data/uploads]
+
+volumes:
+  neurocare-sql:
+  neurocare-uploads:

@@ -1,0 +1,46 @@
+@model IReadOnlyList<MedicationListItemDto>
+@{
+    ViewData["Title"] = "Medicamentos";
+    var h = (PatientHeaderDto)ViewData["Header"]!;
+    var isDoctor = User.IsInRole(Roles.Doctor);
+}
+<partial name="_ClinicalHeader" />
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+    <h2 class="h5 mb-0">Medicamentos</h2>
+    @if (isDoctor) { <a class="btn btn-primary" asp-action="Create" asp-route-patientId="@h.Id">Adicionar medicamento</a> }
+</div>
+<div class="card"><div class="table-responsive">
+<table class="table mb-0 align-middle">
+    <thead><tr><th>Medicamento</th><th>Dose / frequência</th><th>Período</th><th>Situação</th>@if (isDoctor) { <th></th> }</tr></thead>
+    <tbody>
+    @foreach (var m in Model)
+    {
+        <tr>
+            <td><strong>@m.Name</strong>@if (!string.IsNullOrEmpty(m.Instructions)) { <div class="small text-muted">@m.Instructions</div> }<div class="small text-muted">Prescrito por @m.PrescribedBy</div></td>
+            <td>@m.Dosage<div class="small text-muted">@m.Frequency</div></td>
+            <td>@m.StartDate.ToString("dd/MM/yyyy")@(m.EndDate.HasValue ? " → " + m.EndDate.Value.ToString("dd/MM/yyyy") : "")</td>
+            <td><span class="badge @m.Status.MedicationBadge()">@m.Status.Label()</span></td>
+            @if (isDoctor)
+            {
+                <td class="text-end">
+                    @if (m.Status != MedicationStatus.Finished)
+                    {
+                        <a class="btn btn-sm btn-outline-secondary" asp-action="Edit" asp-route-id="@m.Id">Editar</a>
+                        @if (m.Status == MedicationStatus.Active)
+                        {
+                            <form asp-action="Transition" method="post" class="d-inline"><input type="hidden" name="id" value="@m.Id" /><input type="hidden" name="patientId" value="@h.Id" /><input type="hidden" name="action" value="Suspend" /><button class="btn btn-sm btn-outline-warning" type="submit">Suspender</button></form>
+                        }
+                        else
+                        {
+                            <form asp-action="Transition" method="post" class="d-inline"><input type="hidden" name="id" value="@m.Id" /><input type="hidden" name="patientId" value="@h.Id" /><input type="hidden" name="action" value="Resume" /><button class="btn btn-sm btn-outline-success" type="submit">Retomar</button></form>
+                        }
+                        <form asp-action="Transition" method="post" class="d-inline"><input type="hidden" name="id" value="@m.Id" /><input type="hidden" name="patientId" value="@h.Id" /><input type="hidden" name="action" value="Finish" /><button class="btn btn-sm btn-outline-danger" type="submit">Finalizar</button></form>
+                    }
+                </td>
+            }
+        </tr>
+    }
+    @if (Model.Count == 0) { <tr><td colspan="5" class="text-muted text-center py-4">Nenhum medicamento registrado.</td></tr> }
+    </tbody>
+</table></div></div>
+<p class="small text-muted mt-2">Este registro não verifica interações medicamentosas nem substitui a prescrição oficial.</p>

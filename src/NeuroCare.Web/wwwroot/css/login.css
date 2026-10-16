@@ -1,0 +1,475 @@
+﻿/* =========================================================
+   NEUROCARE - TELA DE LOGIN
+   ========================================================= */
+
+.neurocare-login {
+    width: 100%;
+    height: 100vh;
+    min-height: 600px;
+    margin: 0;
+    padding: 0 5vw;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    overflow: hidden;
+    font-family: Inter, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-image: url('/imagens/neurocare-login-bg.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+    box-sizing: border-box;
+}
+
+
+/* =========================================================
+   CAIXA DO LOGIN
+   ========================================================= */
+
+.neurocare-card {
+    width: clamp(420px, 35vw, 560px);
+    /*
+       A altura acompanha o conteúdo, mas possui limites.
+       Assim somente a caixa muda de tamanho quando a janela
+       é redimensionada.
+    */
+    min-height: 580px;
+    max-height: calc(100vh - 70px);
+    margin-right: clamp(10px, 2vw, 55px);
+    position: relative;
+    z-index: 10;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.85);
+    border-radius: 18px;
+    /*
+       Azul claro combinando com o fundo médico.
+    */
+    background: linear-gradient( 145deg, rgba(239, 248, 255, 0.98), rgba(220, 239, 253, 0.97) );
+    box-shadow: 0 25px 60px rgba(5, 54, 94, 0.28), 0 8px 25px rgba(5, 54, 94, 0.15);
+    box-sizing: border-box;
+}
+
+
+/* =========================================================
+   CONTEÚDO
+   ========================================================= */
+
+.neurocare-form-content {
+    width: 100%;
+    height: 100%;
+    padding: clamp(38px, 4vw, 58px) clamp(34px, 4vw, 58px) 30px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+}
+
+
+/* =========================================================
+   CABEÇALHO
+   ========================================================= */
+
+.neurocare-form-header {
+    margin-bottom: 30px;
+}
+
+.neurocare-form-welcome {
+    display: block;
+    margin-bottom: 7px;
+    font-size: 15px;
+    font-weight: 600;
+    color: #286aa4;
+}
+
+.neurocare-form-header h1 {
+    margin: 0;
+    color: #123f68;
+    font-size: clamp(27px, 2.2vw, 34px);
+    line-height: 1.2;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+}
+
+.neurocare-form-header p {
+    margin: 9px 0 0;
+    color: #52718c;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+
+/* =========================================================
+   FORMULÁRIO
+   ========================================================= */
+
+.neurocare-form-login {
+    width: 100%;
+}
+
+.neurocare-validation-summary {
+    margin-bottom: 15px;
+    color: #b42318;
+    font-size: 13px;
+}
+
+.neurocare-field {
+    width: 100%;
+    margin-bottom: 22px;
+}
+
+    .neurocare-field label {
+        display: block;
+        margin-bottom: 8px;
+        color: #174f7c;
+        font-size: 14px;
+        font-weight: 600;
+    }
+
+
+/* =========================================================
+   INPUTS
+   ========================================================= */
+
+.neurocare-input-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.neurocare-input {
+    width: 100%;
+    height: 48px;
+    padding: 0 48px 0 45px;
+    border: 1px solid #b9d4e8;
+    border-radius: 9px;
+    outline: none;
+    background: rgba(255, 255, 255, 0.92);
+    color: #163f5f;
+    font-size: 14px;
+    box-sizing: border-box;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+    .neurocare-input::placeholder {
+        color: #8aa7bd;
+    }
+
+    .neurocare-input:hover {
+        border-color: #8eb9d7;
+    }
+
+    .neurocare-input:focus {
+        border-color: #2585c8;
+        background: #ffffff;
+        box-shadow: 0 0 0 3px rgba(37, 133, 200, 0.13);
+    }
+
+.neurocare-input-icon {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    width: 19px;
+    height: 19px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transform: translateY(-50%);
+    color: #5791b8;
+    pointer-events: none;
+}
+
+
+/* =========================================================
+   BOTÃO DO OLHO
+   ========================================================= */
+
+.neurocare-password-button {
+    position: absolute;
+    right: 11px;
+    top: 50%;
+    width: 35px;
+    height: 35px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transform: translateY(-50%);
+    border: 0;
+    border-radius: 7px;
+    background: transparent;
+    color: #4d83a8;
+    cursor: pointer;
+    transition: color 0.2s ease, background 0.2s ease;
+}
+
+    .neurocare-password-button:hover {
+        color: #176aa0;
+        background: rgba(37, 133, 200, 0.10);
+    }
+
+    .neurocare-password-button:focus-visible {
+        outline: 2px solid #2585c8;
+        outline-offset: 2px;
+    }
+
+.password-eye {
+    display: block;
+    transition: opacity 0.15s ease, transform 0.15s ease;
+}
+
+.password-eye-open {
+    display: none;
+}
+
+.neurocare-password-button.is-visible
+.password-eye-closed {
+    display: none;
+}
+
+.neurocare-password-button.is-visible
+.password-eye-open {
+    display: block;
+}
+
+
+/* =========================================================
+   ERROS
+   ========================================================= */
+
+.neurocare-validation {
+    display: block;
+    margin-top: 5px;
+    color: #b42318;
+    font-size: 12px;
+}
+
+
+/* =========================================================
+   OPÇÕES
+   ========================================================= */
+
+.neurocare-options {
+    width: 100%;
+    margin-top: 2px;
+    margin-bottom: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+}
+
+.neurocare-remember {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    color: #54728b;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+    .neurocare-remember input {
+        position: absolute;
+        opacity: 0;
+        pointer-events: none;
+    }
+
+.neurocare-checkmark {
+    width: 19px;
+    height: 19px;
+    flex-shrink: 0;
+    border: 1px solid #a9c8df;
+    border-radius: 5px;
+    background: #ffffff;
+    position: relative;
+    transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.neurocare-remember input:checked + .neurocare-checkmark {
+    background: #2585c8;
+    border-color: #2585c8;
+}
+
+    .neurocare-remember input:checked + .neurocare-checkmark::after {
+        content: "";
+        position: absolute;
+        left: 5px;
+        top: 2px;
+        width: 5px;
+        height: 9px;
+        border: solid #ffffff;
+        border-width: 0 2px 2px 0;
+        transform: rotate(45deg);
+    }
+
+.neurocare-forgot {
+    color: #2178b5;
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: color 0.2s ease;
+}
+
+    .neurocare-forgot:hover {
+        color: #13577f;
+        text-decoration: underline;
+    }
+
+
+/* =========================================================
+   BOTÃO ENTRAR
+   ========================================================= */
+
+.neurocare-submit {
+    width: 100%;
+    height: 48px;
+    border: 0;
+    border-radius: 9px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    color: #ffffff;
+    background: linear-gradient( 135deg, #1679c5, #218fe0 );
+    box-shadow: 0 8px 18px rgba(20, 118, 183, 0.25);
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+}
+
+    .neurocare-submit:hover {
+        filter: brightness(1.04);
+        transform: translateY(-1px);
+        box-shadow: 0 10px 23px rgba(20, 118, 183, 0.30);
+    }
+
+    .neurocare-submit:active {
+        transform: translateY(0);
+    }
+
+.neurocare-submit-arrow {
+    transition: transform 0.2s ease;
+}
+
+.neurocare-submit:hover
+.neurocare-submit-arrow {
+    transform: translateX(3px);
+}
+
+
+/* =========================================================
+   SEGURANÇA
+   ========================================================= */
+
+.neurocare-security {
+    margin-top: auto;
+    padding-top: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    color: #64839a;
+    font-size: 12px;
+    text-align: center;
+}
+
+    .neurocare-security svg {
+        color: #4387ae;
+    }
+
+
+/* =========================================================
+   RESPONSIVIDADE
+   ========================================================= */
+
+@media (max-width: 1100px) {
+
+    .neurocare-login {
+        padding: 0 25px;
+    }
+
+    .neurocare-card {
+        width: min(500px, 48vw);
+        margin-right: 15px;
+    }
+}
+
+
+@media (max-width: 850px) {
+
+    .neurocare-login {
+        min-height: 100vh;
+        padding: 35px 20px;
+        justify-content: center;
+        background-position: center center;
+    }
+
+    .neurocare-card {
+        width: min(500px, 92vw);
+        min-height: 570px;
+        max-height: none;
+        margin-right: 0;
+    }
+}
+
+
+@media (max-width: 560px) {
+
+    .neurocare-login {
+        padding: 20px 14px;
+    }
+
+    .neurocare-card {
+        width: 100%;
+        min-height: 540px;
+        border-radius: 14px;
+    }
+
+    .neurocare-form-content {
+        padding: 32px 24px 24px;
+    }
+
+    .neurocare-form-header {
+        margin-bottom: 25px;
+    }
+
+        .neurocare-form-header h1 {
+            font-size: 27px;
+        }
+
+    .neurocare-options {
+        align-items: flex-start;
+    }
+
+    .neurocare-forgot {
+        text-align: right;
+    }
+}
+
+
+@media (max-height: 700px) and (min-width: 561px) {
+
+    .neurocare-card {
+        min-height: 540px;
+        max-height: calc(100vh - 30px);
+    }
+
+    .neurocare-form-content {
+        padding: 30px 45px 20px;
+    }
+
+    .neurocare-form-header {
+        margin-bottom: 20px;
+    }
+
+    .neurocare-field {
+        margin-bottom: 16px;
+    }
+
+    .neurocare-options {
+        margin-bottom: 18px;
+    }
+
+    .neurocare-security {
+        padding-top: 15px;
+    }
+}

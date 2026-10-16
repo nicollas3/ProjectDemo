@@ -1,0 +1,12 @@
+@model SaveMedicationDto
+<div class="row g-3">
+    <div class="col-md-6"><label asp-for="Name" class="form-label">Medicamento</label><input asp-for="Name" class="form-control" /><span asp-validation-for="Name" class="text-danger small"></span></div>
+    <div class="col-md-3"><label asp-for="Dosage" class="form-label">Dose</label><input asp-for="Dosage" class="form-control" placeholder="ex.: 100 mg" /><span asp-validation-for="Dosage" class="text-danger small"></span></div>
+    <div class="col-md-3"><label asp-for="Frequency" class="form-label">Frequência</label><input asp-for="Frequency" class="form-control" placeholder="ex.: 3x ao dia" /><span asp-validation-for="Frequency" class="text-danger small"></span></div>
+    <div class="col-md-3"><label asp-for="StartDate" class="form-label">Início</label><input asp-for="StartDate" type="date" class="form-control" /><span asp-validation-for="StartDate" class="text-danger small"></span></div>
+    <div class="col-md-3"><label asp-for="EndDate" class="form-label">Fim (opcional)</label><input asp-for="EndDate" type="date" class="form-control" /><span asp-validation-for="EndDate" class="text-danger small"></span></div>
+
+    <div class="col-md-3 d-flex align-items-end"><div class="form-check mb-2"><input asp-for="ReminderEnabled" class="form-check-input" /><label asp-for="ReminderEnabled" class="form-check-label">Lembretes por e-mail</label></div></div>
+    <div class="col-md-5"><label asp-for="ReminderTimes" class="form-label">Horários dos lembretes</label><input asp-for="ReminderTimes" class="form-control" placeholder="08:00,20:00" /><div class="form-text">Horário local, separado por vírgula.</div><span asp-validation-for="ReminderTimes" class="text-danger small"></span></div>
+    <div class="col-12"><label asp-for="Instructions" class="form-label">Orientações</label><textarea asp-for="Instructions" rows="2" class="form-control"></textarea></div>
+</div>

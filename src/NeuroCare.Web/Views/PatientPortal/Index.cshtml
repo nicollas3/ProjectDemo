@@ -1,0 +1,19 @@
+@model IReadOnlyList<AppointmentListItemDto>
+@{ ViewData["Title"] = "Minhas consultas"; }
+<h1 class="h3 mb-3">Minhas consultas</h1>
+@if (Model.Count == 0)
+{
+    <div class="alert alert-light border">Você não tem consultas futuras.</div>
+}
+else
+{
+    <div class="list-group">
+    @foreach (var a in Model)
+    {
+        <div class="list-group-item d-flex flex-wrap justify-content-between align-items-center gap-2">
+            <div><strong>@a.StartsAtLocal.ToString("dd/MM/yyyy HH:mm")</strong> &middot; @a.Type.Text()<div class="small text-muted">@a.DoctorName</div></div>
+            <span class="badge @a.Status.Badge()">@a.Status.Text()</span>
+        </div>
+    }
+    </div>
+}

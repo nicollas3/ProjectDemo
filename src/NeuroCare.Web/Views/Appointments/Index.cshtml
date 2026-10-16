@@ -1,0 +1,48 @@
+@model AppointmentsIndexViewModel
+@{ ViewData["Title"] = "Consultas"; }
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+    <h1 class="h3 mb-0">Consultas</h1>
+    <a class="btn btn-primary" asp-action="Create">Agendar consulta</a>
+</div>
+<form method="get" class="row g-2 mb-3">
+    <div class="col-6 col-md-3"><label class="form-label small mb-0" for="from">De</label><input id="from" type="date" name="from" value="@Model.From.ToString("yyyy-MM-dd")" class="form-control" /></div>
+    <div class="col-6 col-md-3"><label class="form-label small mb-0" for="to">Até</label><input id="to" type="date" name="to" value="@Model.To.ToString("yyyy-MM-dd")" class="form-control" /></div>
+    <div class="col-auto d-flex align-items-end"><button class="btn btn-outline-primary" type="submit">Filtrar</button></div>
+</form>
+
+@if (Model.Items.Count == 0)
+{
+    <div class="alert alert-light border">Nenhuma consulta no período.</div>
+}
+@foreach (var day in Model.Items.GroupBy(i => i.StartsAtLocal.Date))
+{
+    <h2 class="h6 text-uppercase text-muted mt-4">@day.Key.ToString("dddd, dd/MM/yyyy")</h2>
+    <div class="card mb-2"><ul class="list-group list-group-flush">
+    @foreach (var a in day)
+    {
+        <li class="list-group-item">
+            <div class="d-flex flex-wrap justify-content-between align-items-center gap-2">
+                <div>
+                    <strong>@a.StartsAtLocal.ToString("HH:mm")</strong> <small class="text-muted">(@a.DurationMinutes min)</small> &middot;
+                    <a asp-controller="Patients" asp-action="Details" asp-route-id="@a.PatientId">@a.PatientName</a>
+                    <div class="small text-muted">@a.Type.Text() &middot; @a.DoctorName</div>
+                </div>
+                <div class="d-flex flex-wrap gap-1 align-items-center">
+                    <span class="badge @a.Status.Badge() me-2">@a.Status.Text()</span>
+                    @if (a.Status is AppointmentStatus.Scheduled or AppointmentStatus.Confirmed)
+                    {
+                        <a class="btn btn-sm btn-outline-secondary" asp-action="Edit" asp-route-id="@a.Id">Editar</a>
+                        @if (a.Status == AppointmentStatus.Scheduled)
+                        {
+                            <form asp-action="Transition" method="post"><input type="hidden" name="id" value="@a.Id" /><input type="hidden" name="action" value="Confirm" /><button class="btn btn-sm btn-outline-primary">Confirmar</button></form>
+                        }
+                        <form asp-action="Transition" method="post"><input type="hidden" name="id" value="@a.Id" /><input type="hidden" name="action" value="Complete" /><button class="btn btn-sm btn-outline-success">Concluir</button></form>
+                        <form asp-action="Transition" method="post"><input type="hidden" name="id" value="@a.Id" /><input type="hidden" name="action" value="NoShow" /><button class="btn btn-sm btn-outline-warning">Faltou</button></form>
+                        <form asp-action="Transition" method="post"><input type="hidden" name="id" value="@a.Id" /><input type="hidden" name="action" value="Cancel" /><button class="btn btn-sm btn-outline-danger">Cancelar</button></form>
+                    }
+                </div>
+            </div>
+        </li>
+    }
+    </ul></div>
+}

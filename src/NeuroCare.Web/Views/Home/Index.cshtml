@@ -1,0 +1,90 @@
+@model DashboardViewModel
+@using System.Text.Json
+@{
+    ViewData["Title"] = "Dashboard";
+    var d = Model.Data;
+    var labels = d.StatusCountsLast30Days.Keys.Select(k => k.Text()).ToArray();
+    var values = d.StatusCountsLast30Days.Values.ToArray();
+}
+<h1 class="h3 mb-1">@Model.Greeting</h1>
+<p class="text-muted">Resumo do que precisa da sua atenção hoje.</p>
+
+<div class="row g-3 mb-4">
+    <div class="col-6 col-lg-3"><div class="card stat-card h-100"><div class="card-body"><div class="text-muted small">Pacientes ativos</div><div class="display-6">@d.ActivePatients</div></div></div></div>
+    <div class="col-6 col-lg-3"><div class="card stat-card h-100"><div class="card-body"><div class="text-muted small">Consultas hoje</div><div class="display-6">@d.TodayAppointmentsCount</div></div></div></div>
+    <div class="col-6 col-lg-3"><div class="card stat-card h-100"><div class="card-body"><div class="text-muted small">Consultas futuras</div><div class="display-6">@d.UpcomingAppointments</div></div></div></div>
+    <div class="col-6 col-lg-3"><div class="card stat-card h-100"><div class="card-body"><div class="text-muted small">Sem acompanhamento (90 dias)</div><div class="display-6">@d.PatientsWithoutFollowUp</div></div></div></div>
+</div>
+
+@if (d.SafetyAlerts.Count > 0)
+{
+    <div class="alert alert-danger" role="alert">
+        <strong>Atenção: resposta de segurança em questionário (últimos 30 dias)</strong>
+        <ul class="mb-0 mt-2">
+        @foreach (var a in d.SafetyAlerts)
+        {
+            <li>
+                <a class="alert-link" asp-controller="Questionnaires" asp-action="Result" asp-route-id="@a.ResponseId">@a.PatientName</a>
+                &ndash; @a.QuestionnaireTitle, @a.AnsweredAtLocal.ToString("dd/MM/yyyy HH:mm")
+            </li>
+        }
+        </ul>
+        <div class="small mt-2">Revise o caso com o paciente. O sistema não faz avaliação de risco nem contata o paciente automaticamente.</div>
+    </div>
+}
+
+<div class="row g-3">
+    <div class="col-lg-7">
+        <div class="card h-100">
+            <div class="card-header bg-white fw-semibold">Consultas de hoje</div>
+            @if (d.TodayAppointments.Count == 0)
+            {
+                <div class="card-body text-muted">Nenhuma consulta hoje.</div>
+            }
+            else
+            {
+                <ul class="list-group list-group-flush">
+                    @foreach (var a in d.TodayAppointments)
+                    {
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <span><strong>@a.StartsAtLocal.ToString("HH:mm")</strong> &middot;
+                                <a asp-controller="Patients" asp-action="Details" asp-route-id="@a.PatientId">@a.PatientName</a>
+                                <small class="text-muted">(@a.Type.Text())</small></span>
+                            <span class="badge @a.Status.Badge()">@a.Status.Text()</span>
+                        </li>
+                    }
+                </ul>
+            }
+        </div>
+    </div>
+    <div class="col-lg-5">
+        <div class="card h-100">
+            <div class="card-header bg-white fw-semibold">Consultas por situação (30 dias)</div>
+            <div class="card-body">
+                <canvas data-chart="bar" data-label="Consultas"
+                        data-labels="@JsonSerializer.Serialize(labels)" data-values="@JsonSerializer.Serialize(values)"></canvas>
+                <div class="small text-muted mt-2">Faltas: @d.NoShowLast30Days &middot; Canceladas: @d.CancelledLast30Days</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header bg-white fw-semibold">Pacientes recentes</div>
+            <div class="table-responsive">
+                <table class="table mb-0 align-middle">
+                    <tbody>
+                    @foreach (var p in d.RecentPatients)
+                    {
+                        <tr><td><a asp-controller="Patients" asp-action="Details" asp-route-id="@p.Id">@p.FullName</a></td><td>@p.Age anos</td><td class="text-muted">@p.DoctorName</td></tr>
+                    }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+    <script src="~/js/dashboard.js" asp-append-version="true"></script>
+}

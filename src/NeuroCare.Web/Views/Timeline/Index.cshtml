@@ -1,0 +1,30 @@
+@model IReadOnlyList<TimelineItemDto>
+@{
+    ViewData["Title"] = "Linha do tempo";
+    string Icon(TimelineKind k) => k switch
+    {
+        TimelineKind.Appointment => "📅", TimelineKind.Note => "📝", TimelineKind.Medication => "💊",
+        TimelineKind.Symptom => "🩺", TimelineKind.Seizure => "⚡", TimelineKind.Fall => "🤕", TimelineKind.Questionnaire => "📋", TimelineKind.Document => "📎", _ => "•"
+    };
+}
+<partial name="_ClinicalHeader" />
+<div class="card"><ul class="list-group list-group-flush">
+@foreach (var i in Model)
+{
+    <li class="list-group-item d-flex gap-3">
+        <div class="fs-4">@Icon(i.Kind)</div>
+        <div>
+            <div class="small text-muted">@i.WhenLocal.ToString("dd/MM/yyyy HH:mm")</div>
+            <div>
+                @if (i.Kind == TimelineKind.Note && i.RefId.HasValue && User.IsInRole(Roles.Doctor))
+                {
+                    <a asp-controller="ClinicalNotes" asp-action="Details" asp-route-id="@i.RefId">@i.Title</a>
+                }
+                else { <span>@i.Title</span> }
+            </div>
+            @if (!string.IsNullOrEmpty(i.Detail)) { <div class="small text-muted">@i.Detail</div> }
+        </div>
+    </li>
+}
+@if (Model.Count == 0) { <li class="list-group-item text-muted">Nada registrado ainda.</li> }
+</ul></div>

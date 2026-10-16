@@ -1,0 +1,15 @@
+@model CreateOrganizationDto
+@{ ViewData["Title"] = "Nova organização"; }
+<h1 class="h3 mb-3">Nova organização</h1>
+<form asp-action="Create" method="post" novalidate>
+    <div asp-validation-summary="ModelOnly" class="text-danger small mb-2"></div>
+    <div class="row g-3">
+        <div class="col-md-6"><label asp-for="Name" class="form-label">Nome</label><input asp-for="Name" class="form-control" /><span asp-validation-for="Name" class="text-danger small"></span></div>
+        <div class="col-md-6"><label asp-for="LegalName" class="form-label">Razão social</label><input asp-for="LegalName" class="form-control" /></div>
+        <div class="col-md-4"><label asp-for="DocumentNumber" class="form-label">Documento (CNPJ)</label><input asp-for="DocumentNumber" class="form-control" /></div>
+        <div class="col-12"><hr /><h2 class="h6">Administrador da clínica (receberá um convite por e-mail)</h2></div>
+        <div class="col-md-6"><label asp-for="AdminFullName" class="form-label">Nome</label><input asp-for="AdminFullName" class="form-control" /><span asp-validation-for="AdminFullName" class="text-danger small"></span></div>
+        <div class="col-md-6"><label asp-for="AdminEmail" class="form-label">E-mail</label><input asp-for="AdminEmail" class="form-control" /><span asp-validation-for="AdminEmail" class="text-danger small"></span></div>
+    </div>
+    <div class="mt-4 d-flex gap-2"><button class="btn btn-primary" type="submit">Criar</button><a class="btn btn-outline-secondary" asp-action="Index">Cancelar</a></div>
+</form>

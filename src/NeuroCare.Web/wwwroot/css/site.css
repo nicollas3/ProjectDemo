@@ -1,0 +1,117 @@
+:root {
+    --nc-primary: #2b5f9e;
+    --nc-bg: #f4f6fa;
+}
+
+
+/* =========================================================
+   BASE
+   ========================================================= */
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+    min-height: 100%;
+}
+
+
+body {
+    background: var(--nc-bg);
+}
+
+
+    /*
+   Quando estivermos no login, o fundo da página
+   será controlado exclusivamente pelo login.css.
+*/
+
+    body.public-page {
+        background: #ffffff;
+        overflow-x: hidden;
+    }
+
+
+/* =========================================================
+   MARCA
+   ========================================================= */
+
+.brand {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--nc-primary);
+    text-decoration: none;
+}
+
+
+/* =========================================================
+   ESTRUTURA DA APLICAÇÃO
+   ========================================================= */
+
+.app-shell {
+    display: flex;
+    min-height: 100vh;
+}
+
+
+.app-sidebar {
+    background: #fff;
+    border-right: 1px solid #dee2e6;
+}
+
+
+.app-content {
+    flex: 1;
+    min-width: 0;
+}
+
+
+/* =========================================================
+   SIDEBAR DESKTOP
+   ========================================================= */
+
+@media (min-width: 992px) {
+
+    .app-sidebar {
+        width: 250px;
+        flex-shrink: 0;
+        position: sticky;
+        top: 0;
+        height: 100vh;
+    }
+}
+
+
+/* =========================================================
+   NAVEGAÇÃO
+   ========================================================= */
+
+.nav-pills .nav-link {
+    color: #344054;
+}
+
+
+    .nav-pills .nav-link.active {
+        background: var(--nc-primary);
+        color: #fff;
+    }
+
+
+/* =========================================================
+   DASHBOARD
+   ========================================================= */
+
+.stat-card .display-6 {
+    font-weight: 600;
+    color: var(--nc-primary);
+}
+
+
+.ai-notice {
+    border-left: 4px solid #f0ad4e;
+}
+
+
+.pre-wrap {
+    white-space: pre-wrap;
+}

@@ -1,0 +1,17 @@
+@model SaveSeizureDto
+@{ ViewData["Title"] = "Registrar crise"; }
+<partial name="_ClinicalHeader" />
+<h2 class="h5 mb-3">Registrar crise</h2>
+<div class="alert alert-warning small">Em caso de emergência, ligue <strong>192 (SAMU)</strong>.</div>
+<form asp-action="Create" asp-route-patientId="@ViewData["PatientId"]" method="post" novalidate>
+    <div asp-validation-summary="ModelOnly" class="text-danger small mb-2"></div>
+    <div class="row g-3">
+        <div class="col-md-4"><label asp-for="OccurredAtLocal" class="form-label">Quando</label><input asp-for="OccurredAtLocal" type="datetime-local" class="form-control" /><span asp-validation-for="OccurredAtLocal" class="text-danger small"></span></div>
+        <div class="col-md-5"><label asp-for="Type" class="form-label">Tipo</label><select asp-for="Type" asp-items="EnumText.SeizureTypeItems()" class="form-select"></select></div>
+        <div class="col-md-3"><label asp-for="DurationSeconds" class="form-label">Duração (segundos)</label><input asp-for="DurationSeconds" type="number" min="1" max="86400" class="form-control" /><span asp-validation-for="DurationSeconds" class="text-danger small"></span></div>
+        <div class="col-md-4 d-flex align-items-end"><div class="form-check"><input asp-for="LossOfConsciousness" class="form-check-input" /><label asp-for="LossOfConsciousness" class="form-check-label">Houve perda de consciência</label></div></div>
+        <div class="col-md-8"><label asp-for="Trigger" class="form-label">Possível gatilho (opcional)</label><input asp-for="Trigger" class="form-control" /></div>
+        <div class="col-12"><label asp-for="Notes" class="form-label">Observações</label><textarea asp-for="Notes" rows="3" class="form-control"></textarea></div>
+    </div>
+    <div class="mt-4 d-flex gap-2"><button class="btn btn-primary" type="submit">Salvar</button><a class="btn btn-outline-secondary" asp-action="Index" asp-route-patientId="@ViewData["PatientId"]">Cancelar</a></div>
+</form>

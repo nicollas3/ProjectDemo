@@ -1,0 +1,42 @@
+@model ClinicQuestionnaireEditDto
+@{ ViewData["Title"] = Model.Id.HasValue ? "Editar questionário" : "Novo questionário"; }
+<h1 class="h3 mb-3">@ViewData["Title"]</h1>
+<form method="post" asp-action="@(Model.Id.HasValue ? "Edit" : "Create")" asp-route-id="@Model.Id" id="questionnaire-builder">
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <div class="card mb-3"><div class="card-body"><div class="row g-3">
+        <div class="col-md-4"><label class="form-label">Chave</label><input name="Key" value="@Model.Form.Key" class="form-control" placeholder="ex.: sono-clinica" readonly="@(Model.Id.HasValue ? "readonly" : null)" /><div class="form-text">Identificador estável; não pode ser alterado após a criação.</div></div>
+        <div class="col-md-8"><label class="form-label">Título</label><input name="Title" value="@Model.Form.Title" class="form-control" /></div>
+        <div class="col-12"><label class="form-label">Descrição</label><textarea name="Description" class="form-control" rows="2">@Model.Form.Description</textarea></div>
+        <div class="col-12"><label class="form-label">Enunciado/período</label><input name="Prompt" value="@Model.Form.Prompt" class="form-control" /></div>
+        <div class="col-md-4"><label class="form-label">Pergunta de segurança nº</label><input name="SafetyItemNumber" value="@Model.Form.SafetyItemNumber" type="number" min="1" class="form-control" /><div class="form-text">Se informada, resposta com valor maior que zero gera alerta ao médico responsável.</div></div>
+        <div class="col-md-4 d-flex align-items-end"><div class="form-check mb-2"><input name="ClinicianOnly" value="true" type="checkbox" class="form-check-input" @(Model.Form.ClinicianOnly ? "checked" : null) /><input type="hidden" name="ClinicianOnly" value="false" /><label class="form-check-label">Somente profissional</label></div></div>
+        <div class="col-md-4 d-flex align-items-end"><div class="form-check mb-2"><input name="Active" value="true" type="checkbox" class="form-check-input" @(Model.Form.Active ? "checked" : null) /><input type="hidden" name="Active" value="false" /><label class="form-check-label">Ativo</label></div></div>
+    </div></div></div>
+
+    <div class="d-flex justify-content-between align-items-center mb-2"><h2 class="h5 mb-0">Perguntas</h2><button type="button" class="btn btn-sm btn-outline-primary" data-add-question>Adicionar pergunta</button></div>
+    <div id="questions-container">
+    @for (var i = 0; i < Model.Form.Items.Count; i++)
+    {
+        <div class="card mb-2 question-row" data-question-row><div class="card-body"><div class="row g-2">
+            <div class="col-md-7"><label class="form-label">Pergunta</label><input class="form-control" name="Items[@i].Text" value="@Model.Form.Items[i].Text" /></div>
+            <div class="col-md-4"><label class="form-label">Opções</label><input class="form-control" name="Items[@i].Options" value="@Model.Form.Items[i].Options" /><div class="form-text">Formato: 0=Não;1=Sim</div></div>
+            <div class="col-md-1 d-flex align-items-end"><button type="button" class="btn btn-outline-danger w-100" data-remove-row aria-label="Remover pergunta">×</button></div>
+        </div></div></div>
+    }
+    </div>
+
+    <div class="d-flex justify-content-between align-items-center mt-4 mb-2"><h2 class="h5 mb-0">Faixas de pontuação</h2><button type="button" class="btn btn-sm btn-outline-primary" data-add-band>Adicionar faixa</button></div>
+    <div id="bands-container">
+    @for (var i = 0; i < Model.Form.Bands.Count; i++)
+    {
+        <div class="row g-2 mb-2 band-row" data-band-row>
+            <div class="col-md-2"><input class="form-control" type="number" name="Bands[@i].Min" value="@Model.Form.Bands[i].Min" placeholder="Mín." /></div>
+            <div class="col-md-2"><input class="form-control" type="number" name="Bands[@i].Max" value="@Model.Form.Bands[i].Max" placeholder="Máx." /></div>
+            <div class="col-md-7"><input class="form-control" name="Bands[@i].Label" value="@Model.Form.Bands[i].Label" placeholder="Rótulo" /></div>
+            <div class="col-md-1"><button type="button" class="btn btn-outline-danger w-100" data-remove-row>×</button></div>
+        </div>
+    }
+    </div>
+    <div class="mt-4 d-flex gap-2"><button class="btn btn-primary" type="submit">Salvar</button><a asp-action="Index" class="btn btn-outline-secondary">Cancelar</a></div>
+</form>
+@section Scripts { <script src="~/js/questionnaire-builder.js" asp-append-version="true"></script> }

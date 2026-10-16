@@ -1,0 +1,437 @@
+@{
+    var controller =
+        ViewContext.RouteData.Values["controller"]?.ToString() ?? "";
+
+    var authenticated =
+        User.Identity?.IsAuthenticated == true;
+
+    var isStaff =
+        User.IsInRole(Roles.Doctor) ||
+        User.IsInRole(Roles.ClinicAdmin);
+
+
+    string Active(string c) =>
+        string.Equals(
+            controller,
+            c,
+            StringComparison.OrdinalIgnoreCase
+        )
+            ? "active"
+            : "";
+}
+
+
+<!DOCTYPE html>
+
+<html lang="pt-BR">
+
+<head>
+
+    <meta charset="utf-8" />
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1" />
+
+
+    <title>
+        @ViewData["Title"] - NeuroCare
+    </title>
+
+
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
+
+
+    <link rel="stylesheet"
+          href="~/css/site.css"
+          asp-append-version="true" />
+
+
+    @await RenderSectionAsync(
+        "Styles",
+        required: false
+    )
+
+</head>
+
+
+<body class="@(authenticated ? "authenticated-page" : "public-page")">
+
+
+@if (authenticated)
+{
+
+    <!-- =====================================================
+         HEADER MOBILE
+         ===================================================== -->
+
+    <header class="navbar bg-white border-bottom d-lg-none px-3">
+
+        <button class="btn btn-outline-secondary"
+                type="button"
+                data-bs-toggle="offcanvas"
+                data-bs-target="#sidebar"
+                aria-controls="sidebar"
+                aria-label="Abrir menu">
+
+            ☰ Menu
+
+        </button>
+
+
+        <span class="fw-semibold text-primary">
+
+            NeuroCare
+
+        </span>
+
+    </header>
+
+
+    <!-- =====================================================
+         APLICAÇÃO
+         ===================================================== -->
+
+    <div class="app-shell">
+
+
+        <!-- =================================================
+             SIDEBAR
+             ================================================= -->
+
+        <nav class="offcanvas-lg offcanvas-start app-sidebar"
+             tabindex="-1"
+             id="sidebar"
+             aria-label="Menu principal">
+
+
+            <div class="offcanvas-header d-lg-none">
+
+                <h5 class="offcanvas-title">
+
+                    NeuroCare
+
+                </h5>
+
+
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="offcanvas"
+                        data-bs-target="#sidebar"
+                        aria-label="Fechar">
+
+                </button>
+
+            </div>
+
+
+            <div class="offcanvas-body flex-column p-3">
+
+
+                <a class="brand d-none d-lg-block mb-4"
+                   asp-controller="Home"
+                   asp-action="Index">
+
+                    NeuroCare
+
+                </a>
+
+
+                <ul class="nav nav-pills flex-column gap-1 mb-auto">
+
+
+                    @if (isStaff)
+                    {
+
+                        <li class="nav-item">
+
+                            <a class="nav-link @Active("Home")"
+                               asp-controller="Home"
+                               asp-action="Index">
+
+                                Dashboard
+
+                            </a>
+
+                        </li>
+
+
+                        <li class="nav-item">
+
+                            <a class="nav-link @Active("Patients")"
+                               asp-controller="Patients"
+                               asp-action="Index">
+
+                                Pacientes
+
+                            </a>
+
+                        </li>
+
+
+                        <li class="nav-item">
+
+                            <a class="nav-link @Active("Appointments")"
+                               asp-controller="Appointments"
+                               asp-action="Index">
+
+                                Consultas
+
+                            </a>
+
+                        </li>
+
+
+                        @if (User.IsInRole(Roles.ClinicAdmin))
+                        {
+
+                            <li class="nav-item">
+
+                                <a class="nav-link @Active("Users")"
+                                   asp-controller="Users"
+                                   asp-action="Index">
+
+                                    Usuários
+
+                                </a>
+
+                            </li>
+
+                        }
+
+
+                        @foreach (var soon in new[]
+                        {
+                            "Questionários",
+                            "Medicamentos",
+                            "Documentos",
+                            "Relatórios"
+                        })
+                        {
+
+                            <li class="nav-item">
+
+                                <span class="nav-link disabled">
+
+                                    @soon
+
+                                    <small class="badge text-bg-light">
+
+                                        em breve
+
+                                    </small>
+
+                                </span>
+
+                            </li>
+
+                        }
+
+                    }
+
+                    else if (User.IsInRole(Roles.Patient))
+                    {
+
+                        <li class="nav-item">
+
+                            <a class="nav-link @Active("PatientPortal")"
+                               asp-controller="PatientPortal"
+                               asp-action="Index">
+
+                                Minhas consultas
+
+                            </a>
+
+                        </li>
+
+
+                        <li class="nav-item">
+
+                            <a class="nav-link @Active("Medications")"
+                               asp-controller="Medications"
+                               asp-action="Index">
+
+                                Medicamentos
+
+                            </a>
+
+                        </li>
+
+
+                        <li class="nav-item">
+
+                            <a class="nav-link @Active("Symptoms")"
+                               asp-controller="Symptoms"
+                               asp-action="Index">
+
+                                Sintomas
+
+                            </a>
+
+                        </li>
+
+
+                        <li class="nav-item">
+
+                            <a class="nav-link @Active("Seizures")"
+                               asp-controller="Seizures"
+                               asp-action="Index">
+
+                                Crises
+
+                            </a>
+
+                        </li>
+
+
+                        <li class="nav-item">
+
+                            <a class="nav-link @Active("Timeline")"
+                               asp-controller="Timeline"
+                               asp-action="Index">
+
+                                Linha do tempo
+
+                            </a>
+
+                        </li>
+
+                    }
+
+                    else if (User.IsInRole(Roles.Administrator))
+                    {
+
+                        <li class="nav-item">
+
+                            <a class="nav-link @Active("Home")"
+                               asp-controller="Home"
+                               asp-action="Index">
+
+                                Início
+
+                            </a>
+
+                        </li>
+
+
+                        <li class="nav-item">
+
+                            <a class="nav-link @Active("Organizations")"
+                               asp-controller="Organizations"
+                               asp-action="Index">
+
+                                Organizações
+
+                            </a>
+
+                        </li>
+
+                    }
+
+                    else
+                    {
+
+                        <li class="nav-item">
+
+                            <a class="nav-link @Active("Home")"
+                               asp-controller="Home"
+                               asp-action="Index">
+
+                                Início
+
+                            </a>
+
+                        </li>
+
+                    }
+
+                </ul>
+
+
+                <hr />
+
+
+                <div class="small text-muted mb-2">
+
+                    @User.Identity!.Name
+
+                </div>
+
+
+                <a class="btn btn-sm btn-outline-secondary mb-2"
+                   asp-controller="Account"
+                   asp-action="ChangePassword">
+
+                    Alterar senha
+
+                </a>
+
+
+                <form asp-controller="Account"
+                      asp-action="Logout"
+                      method="post">
+
+                    <button type="submit"
+                            class="btn btn-sm btn-outline-danger w-100">
+
+                        Sair
+
+                    </button>
+
+                </form>
+
+
+            </div>
+
+        </nav>
+
+
+        <!-- =================================================
+             CONTEÚDO
+             ================================================= -->
+
+        <main class="app-content p-3 p-lg-4">
+
+            @await Html.PartialAsync("_Alerts")
+
+            @RenderBody()
+
+        </main>
+
+    </div>
+
+}
+else
+{
+
+    <!-- =====================================================
+         PÁGINAS PÚBLICAS
+         LOGIN / RECUPERAÇÃO DE SENHA ETC.
+         ================================================= -->
+
+    @RenderBody()
+
+}
+
+
+<!-- =========================================================
+     BOOTSTRAP
+     ========================================================= -->
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
+</script>
+
+
+<!-- =========================================================
+     SCRIPTS DA PÁGINA
+     ========================================================= -->
+
+@await RenderSectionAsync(
+    "Scripts",
+    required: false
+)
+
+
+</body>
+
+</html>
