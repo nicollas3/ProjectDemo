@@ -13,7 +13,7 @@ services:
     depends_on: [db]
     environment:
       ASPNETCORE_ENVIRONMENT: Development
-      ConnectionStrings__DefaultConnection: "Server=db;Database=NeuroCare;User Id=sa;Password=${MSSQL_SA_PASSWORD};TrustServerCertificate=True"
+      ConnectionStrings__DefaultConnection: "Server=---;Database=NeuroCare;User Id=sa;Password=${MSSQL_SA_PASSWORD};TrustServerCertificate=True"
       Database__AutoInitialize: "true"
       Seed__Enabled: "true"
       App__PublicBaseUrl: "http://localhost:8080"
