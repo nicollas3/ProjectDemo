@@ -92,7 +92,7 @@ Configuração de IA, armazenamento e e-mail: **não aplicável ainda** (serão 
 
 Detalhes em `/docs`.
 
-## Etapa 5 — banco existente
+## Banco existente
 
 A Etapa 5 adiciona as tabelas `ClinicQuestionnaires`, `ConsentRecords` e `NotificationDispatches`, além das colunas `ReminderEnabled` e `ReminderTimes` em `Medications`.
 
