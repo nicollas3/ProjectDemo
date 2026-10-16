@@ -70,8 +70,6 @@ Senha: valor de `Seed:DemoPassword` (em `appsettings.Development.json` para dev 
 | medico.b@neurocare.local | Doctor | Clínica Demo B |
 | paciente@neurocare.local | Patient | Clínica Demo A |
 
-Limitações: arquivos **não são criptografados pela aplicação** (use criptografia de disco/volume) e **não há antivírus** (integrar um scanner antes de produção); upload na memória (adequado ao limite de 10 MB); se o banco falhar após a gravação do arquivo pode sobrar um arquivo órfão; só PDF/JPG/PNG (sem DICOM nem Word); relatório sem assinatura digital nem PDF gerado no servidor.
-
 ## Ainda NÃO implementado (próximas etapas)
 
 Exames, anexos, evolução SOAP, medicamentos, sintomas, crises, quedas,
